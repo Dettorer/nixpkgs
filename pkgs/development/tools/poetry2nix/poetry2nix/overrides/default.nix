@@ -2069,6 +2069,12 @@ lib.composeManyExtensions [
           }
         );
 
+      pyqt6-sip = super.pyqt6-sip.overridePythonAttrs (
+        old: {
+          buildInputs = (old.buildInputs or [ ]) ++ [ self.setuptools ];
+        }
+      );
+
       pytest-datadir = super.pytest-datadir.overridePythonAttrs (
         old: {
           postInstall = ''
