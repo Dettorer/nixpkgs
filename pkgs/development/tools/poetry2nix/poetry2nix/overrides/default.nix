@@ -170,6 +170,12 @@ lib.composeManyExtensions [
         }
       );
 
+      attrs = super.attrs.overridePythonAttrs (
+        old: {
+          buildInputs = (old.buildInputs or [ ]) ++ [ self.hatchling ];
+        }
+      );
+
       av = super.av.overridePythonAttrs (
         old: {
           nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
