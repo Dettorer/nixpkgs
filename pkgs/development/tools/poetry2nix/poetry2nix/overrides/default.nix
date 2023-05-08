@@ -93,6 +93,12 @@ lib.composeManyExtensions [
         in
           pkgs."qt${selector}" or pkgs.qt5;
 
+      selectQt6 = version:
+        let
+          selector = builtins.concatStringsSep "" (lib.take 2 (builtins.splitVersion version));
+        in
+          pkgs."qt${selector}" or pkgs.qt6;
+
     in
 
     {
@@ -2063,6 +2069,48 @@ lib.composeManyExtensions [
               qt5.qtgamepad # As of 2022-05-13 not a port of qt5.full
               pkgs.gtk3
               pkgs.speechd
+              pkgs.postgresql
+              pkgs.unixODBC
+            ];
+          }
+        );
+
+      pyqt6 =
+        let
+          qt6 = selectQt6 super.pyqt6.version;
+        in
+        super.pyqt6.overridePythonAttrs (
+          old: {
+            # postPatch = ''
+              # # Confirm license
+              # sed -i s/"if tool == 'pep517':"/"if True:"/ project.py
+            # '';
+
+            dontConfigure = true;
+            dontWrapQtApps = true;
+            nativeBuildInputs = old.nativeBuildInputs or [ ] ++ [
+              # self.pyqt-builder
+              # self.sip
+              qt6.full
+            ];
+          }
+        );
+
+      pyqt6-qt6 =
+        let
+          qt6 = selectQt6 super.pyqt6-qt6.version;
+        in
+        super.pyqt6-qt6.overridePythonAttrs (
+          old: {
+            dontWrapQtApps = true;
+            propagatedBuildInputs = old.propagatedBuildInputs or [ ] ++ [
+              qt6.full
+              pkgs.gst_all_1.gstreamer
+              pkgs.gst_all_1.gst-plugins-base
+              # qt5.qtgamepad # As of 2022-05-13 not a port of qt5.full
+              pkgs.gtk3
+              pkgs.speechd
+              pkgs.cairo
               pkgs.postgresql
               pkgs.unixODBC
             ];
