@@ -8513,6 +8513,8 @@ self: super: with self; {
 
   pretend = callPackage ../development/python-modules/pretend { };
 
+  prettymaps = callPackage ../development/python-modules/prettymaps { };
+
   prettytable = callPackage ../development/python-modules/prettytable { };
 
   primecountpy = callPackage ../development/python-modules/primecountpy { };
